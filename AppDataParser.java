@@ -31,26 +31,28 @@ public class AppDataParser {
             if ((yes)) {
               for(int k=1; k<arr[0].length; k++)
               {
-                if (arr[i][k] == "" || res[j][k] == "") {
+                if (arr[i][k].equals("") || res[j][k].equals("")){
                   res[j][k] = arr[i][k] + res[j][k];
                   break;
                 } else {
-                  double begin_old = Double.parseDouble(arr[i][k].split("-")[0]);
-                  double end_old = Double.parseDouble(arr[i][k].split("-")[1]);
-                  double begin_new = Double.parseDouble(res[j][k].split("-")[0]);
-                  double end_new = Double.parseDouble(res[j][k].split("-")[1]);
+                  double begin_new = Double.parseDouble(arr[i][k].split("-")[0]);
+                  double end_new = Double.parseDouble(arr[i][k].split("-")[1]);
+                  double begin_old = Double.parseDouble(res[j][k].split("-")[0]);
+                  double end_old = Double.parseDouble(res[j][k].split("-")[1]);
 
 
-                  //*************Работает некорректно!!!!!!!
+                  //Усоловия по объединению временных промежутков
                   if (begin_new > end_old) {
-                    res[j][k] = String.format("***%s, %s***", arr[i][k], res[j][k]);
-                  } else if (begin_new <= end_old && begin_new >= begin_old) {
-                    res[j][k] = String.format("***%f-%f**", begin_old, end_old);
-                  } else if (begin_new < begin_old && end_new >= begin_old) {
-                    res[j][k] = String.format("***%f-%f***", begin_new, end_old);
-                  } else {
-                    res[j][k] = String.format("***%s, %s***", res[j][k], arr[i][k]);
-                  }
+                    res[j][k] = String.format("***%s, %s****", res[j][k], arr[i][k]);
+                  } else if (begin_new <= begin_old && end_new >= end_old) {
+                    res[j][k] = String.format("***%.2f-%.2f**", begin_new, end_new);
+                  } else if (begin_new > begin_old && end_new < end_old) {
+                    res[j][k] = String.format("***%.2f-%.2f***", begin_old, end_old);
+                  } else if (begin_new <= begin_old && end_new < end_old) {
+                    res[j][k] = String.format("***%.2f-%.2f**", begin_new, end_old);
+                  } else if (begin_new > begin_old && end_new >= end_old) {
+                    res[j][k] = String.format("***%.2f-%.2f**", begin_old, end_new);
+                  } else res[j][k] = String.format("***%s, %s**", res[j][k], arr[i][k]);
                 }
 
               }
